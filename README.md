@@ -1,5 +1,6 @@
 # WSL-Port-Forward
-Forward network traffic directed to Windows to your WSL environment. Pretty much a user friendly wrapper for the netsh portproxy
+Forward network traffic directed to Windows to your WSL environment.  
+Pretty much a user friendly wrapper for the netsh portproxy
 
 ## Install
 
