@@ -8,7 +8,9 @@ Uses [wsl-sudo](https://github.com/Chronial/wsl-sudo) by [Chronial](https://gith
 
 ```shell
 git clone https://github.com/JorianWoltjer/WSL-Port-Forward.git
-alias pfw="python3 $(pwd)/WSL-Port-Forward/pfw.py"  # Also put in ~/.bashrc
+cd WSL-Port-Forward
+pip install -r requirements.txt
+alias pfw="python3 $(pwd)/pfw.py"  # Also put in ~/.bashrc
 pfw -h
 ```
 
