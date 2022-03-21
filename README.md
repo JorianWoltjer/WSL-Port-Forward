@@ -24,6 +24,7 @@ optional arguments:
 
 ## Examples
 
+Add port 80 and 443:
 ```shell
 $ pfw add 80,443
 [~] Forwarding port 80 to 172.28.118.26...
@@ -39,6 +40,7 @@ Address         Port        Address         Port
 *               443         172.28.118.26   443
 ```
 
+Remove port 443:
 ```shell
 $ pfw remove 443
 [~] Removing port 443...
@@ -51,6 +53,7 @@ Address         Port        Address         Port
 *               80          172.28.118.26   80
 ```
 
+List all ports:
 ```shell
 $ pfw list
 Listen on ipv4:             Connect to ipv4:
@@ -60,6 +63,7 @@ Address         Port        Address         Port
 *               80          172.28.118.26   80
 ```
 
+Clear all ports:
 ```shell
 $ pfw clear
 [~] Starting administrator prompt...
