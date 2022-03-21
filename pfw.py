@@ -40,8 +40,6 @@ def run_as_user(command):  # Run command normally
     return subprocess.check_output(["powershell.exe", "-Command", command]).decode("utf-8").strip()
 
 
-# TODO: Add Update function to update the address of all registered ports (using "portproxy set")
-
 def add_ports(ports):  # Add a port
     ip = ARGS.ip or get_ip()
     commands = []

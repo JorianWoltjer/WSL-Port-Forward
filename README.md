@@ -72,3 +72,7 @@ $ pfw clear
 
 [+] Cleared all ports!
 ```
+
+# TODO
+
+* Add `update` function to update the address of all registered ports (using "portproxy set")
