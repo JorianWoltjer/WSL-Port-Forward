@@ -1,6 +1,8 @@
 # WSL-Port-Forward
 Forward network traffic directed to Windows to your WSL environment.  
-Pretty much a user friendly wrapper for the netsh portproxy
+Pretty much a user friendly wrapper for the netsh portproxy.
+
+Uses [wsl-sudo](https://github.com/Chronial/wsl-sudo) by [Chronial](https://github.com/Chronial) to execute `netsh` commands as administrator from WSL.
 
 ## Install
 
