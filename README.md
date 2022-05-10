@@ -10,7 +10,7 @@ Uses [wsl-sudo](https://github.com/Chronial/wsl-sudo) by [Chronial](https://gith
 git clone https://github.com/JorianWoltjer/WSL-Port-Forward.git
 cd WSL-Port-Forward
 pip install -r requirements.txt
-alias pfw="python3 $(pwd)/pfw.py"  # Also put in ~/.bashrc
+alias pfw="python3 /path/to/pfw.py"  # Also put in ~/.bashrc
 pfw -h
 ```
 
