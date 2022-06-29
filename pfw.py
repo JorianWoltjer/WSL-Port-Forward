@@ -17,14 +17,17 @@ class PortsParser(argparse.Action):
 parser = argparse.ArgumentParser()
 subparsers = parser.add_subparsers(dest="action", required=True)
 
-parser_add = subparsers.add_parser("add")
-parser_remove = subparsers.add_parser("remove")
+parser_add = subparsers.add_parser("add", help="Add ports to forward")
+parser_remove = subparsers.add_parser("remove", help="Remove forwarded ports")
 for p in [parser_add, parser_remove]:  # Add options to both
     p.add_argument("-ip", "--ip", help="IP address to forward to")
     p.add_argument("port", help="Port to forward (multiple seperated by comma)", action=PortsParser)
 
-subparsers.add_parser("list")
-subparsers.add_parser("clear")
+parser_update = subparsers.add_parser("update", help="Update all forwarded ports to use current WSL address (changes after boot)")
+parser_update.add_argument("-ip", "--ip", help="IP address to forward to")
+
+subparsers.add_parser("list", help="List all forwarded ports")
+subparsers.add_parser("clear", help="Clear all forwarded ports")
 
 ARGS = parser.parse_args()
 
@@ -70,6 +73,27 @@ def clear_ports():  # Clear all ports
     run_as_admin("netsh interface portproxy reset")
     print("[+] Cleared all ports!")
 
+def update_ports():  # Update all ports to use current address
+    print("[~] Finding forwarded ports...")
+    ip = ARGS.ip or get_ip()
+    
+    list_output = run_as_user("netsh interface portproxy show v4tov4")
+    print(list_output)
+    matches = re.findall(r'^\S+\s+(\d+)', list_output, re.MULTILINE)
+    
+    if not matches:
+        print("[-] No ports forwarded.")
+        return
+    
+    commands = []
+    for port in matches:
+        print(f"[~] Updating port {port} to {ip}...")
+        commands.append(f"netsh interface portproxy set v4tov4 listenport={port} connectaddress={ip}")
+    
+    run_as_admin("; ".join(commands))  # Run all commands at once
+    print("[+] Updated all ports!")
+    list_ports()
+
 
 if __name__ == "__main__":
     if ARGS.action == "add":
@@ -80,3 +104,5 @@ if __name__ == "__main__":
         list_ports()
     elif ARGS.action == "clear":
         clear_ports()
+    elif ARGS.action == "update":
+        update_ports()
