@@ -3,7 +3,8 @@ import argparse
 import re
 import subprocess
 from importlib import import_module
-wsl_sudo = import_module("wsl-sudo")
+wsl_sudo = import_module("wsl-sudo")  # Cannot normally import name with a dash (-)
+
 
 class PortsParser(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
@@ -17,16 +18,16 @@ parser = argparse.ArgumentParser()
 subparsers = parser.add_subparsers(dest="action", required=True)
 
 parser_add = subparsers.add_parser("add")
-parser_add.add_argument("port", help="Port to forward (multiple seperated by comma)", action=PortsParser)
-parser_remove = subparsers.add_parser("remove", aliases=["delete"])
-parser_remove.add_argument("port", help="Port to remove (multiple seperated by comma)", action=PortsParser)
-for p in [parser_add, parser_remove]:
+parser_remove = subparsers.add_parser("remove")
+for p in [parser_add, parser_remove]:  # Add options to both
     p.add_argument("-ip", "--ip", help="IP address to forward to")
+    p.add_argument("port", help="Port to forward (multiple seperated by comma)", action=PortsParser)
 
-subparsers.add_parser("list", aliases=["show"])
-subparsers.add_parser("clear", aliases=["reset"])
+subparsers.add_parser("list")
+subparsers.add_parser("clear")
 
 ARGS = parser.parse_args()
+
 
 def get_ip():  # Get WSL IP from interface
     import netifaces as ni
@@ -70,11 +71,12 @@ def clear_ports():  # Clear all ports
     print("[+] Cleared all ports!")
 
 
-if ARGS.action == "add":
-    add_ports(ARGS.port)
-elif ARGS.action in ["remove", "delete"]:
-    remove_ports(ARGS.port)
-elif ARGS.action in ["list", "show"]:
-    list_ports()
-elif ARGS.action in ["clear", "reset"]:
-    clear_ports()
+if __name__ == "__main__":
+    if ARGS.action == "add":
+        add_ports(ARGS.port)
+    elif ARGS.action == "remove":
+        remove_ports(ARGS.port)
+    elif ARGS.action == "list":
+        list_ports()
+    elif ARGS.action == "clear":
+        clear_ports()
