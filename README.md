@@ -14,8 +14,8 @@ Because `netsh` requires administrator privilages, it uses [wsl-sudo](https://gi
 ```shell
 git clone https://github.com/JorianWoltjer/WSL-Port-Forward.git
 cd WSL-Port-Forward
-pip install -r requirements.txt
-alias pfw="python3 /path/to/pfw.py"  # Also put in ~/.bashrc
+pip install -r requirements.txt  # Install requirements
+sudo ln -s $(pwd)/pfw.py /usr/bin/pfw  # Put `pfw` into PATH
 pfw -h
 ```
 
