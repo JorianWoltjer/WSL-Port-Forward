@@ -109,7 +109,7 @@ $ pfw clear
 Get-Process -Id (Get-NetTCPConnection -LocalPort $Port).OwningProcess
 ```
 
-2. If there does not seem to be any other process using the port, try restarting Host Network Service ([source](https://stackoverflow.com/a/67442253/10508498)
+2. If there does not seem to be any other process using the port, try restarting Host Network Service ([source](https://stackoverflow.com/a/67442253/10508498))
 
 ```cmd
 net stop hns && net start hns
