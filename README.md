@@ -23,7 +23,7 @@ pfw -h
 
 A common use case for this tool is listeners. If you have a `nc -lp 1234` listener for example in one terminal, you can use another to run `pfw add 1234`. That will create the listener. 
 
-One small issue is the fact that Windows randomizes the WSL IP address that needs to be provided with `netsh` every time that WSL restarts. This would mean that every time you restart WSL, you would need to `clear` the ports, and `add` them all back. To automate this there is also an **`update`** command, that will update all forwarded ports to use the current address. 
+One annoying thing is the fact that Windows randomizes the WSL IP address that needs to be provided with `netsh` every time that WSL restarts. This would mean that every time you restart WSL, you would need to `clear` the ports, and `add` them all back. To automate this process there is an **`update`** command, that will update all forwarded ports to use the current address. 
 
 ```
 usage: pfw [-h] {add,remove,list,clear,update} ...
@@ -40,6 +40,8 @@ optional arguments:
   -h, --help            show this help message and exit
 ```
 
+> **Tip**: In Python 3.9 and above it becomes possible to catch errors in `argparse`, and I added a shortcut to quickly **add** a port. Simply provide the port where the action would be, and it will interpret that as trying to add the port. This means `pfw 80` is equivalent to `pfw add 80`
+
 ## Examples
 
 * Add port 80 and 443:
@@ -49,7 +51,6 @@ $ pfw add 80,443
 [~] Forwarding port 80 to 172.28.118.26...
 [~] Forwarding port 443 to 172.28.118.26...
 [~] Starting administrator prompt...
-
 
 Listen on ipv4:             Connect to ipv4:
 

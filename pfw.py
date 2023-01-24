@@ -3,18 +3,29 @@ import argparse
 import re
 import subprocess
 from importlib import import_module
+import sys
 wsl_sudo = import_module("wsl-sudo")  # Cannot normally import name with a dash (-)
 
 
 class PortsParser(argparse.Action):
-    def __call__(self, parser, namespace, values, option_string=None):
+    def __call__(self, parser, namespace, values, option_string=None, return_value=False):
         if not re.fullmatch(r'\d+(,\d+)*', values):
+            if return_value:
+                return None
             parser.error(f"Invalid port range: {values}")
         
         values = values.split(",")
+        
+        if return_value:
+            return values
         setattr(namespace, self.dest, values)
+        
 
-parser = argparse.ArgumentParser()
+if sys.version_info >= (3, 9):
+    parser = argparse.ArgumentParser(exit_on_error=False)
+else:
+    parser = argparse.ArgumentParser()
+
 subparsers = parser.add_subparsers(dest="action", required=True)
 
 parser_add = subparsers.add_parser("add", help="Add ports to forward")
@@ -29,7 +40,23 @@ parser_update.add_argument("-ip", "--ip", help="IP address to forward to")
 subparsers.add_parser("list", help="List all forwarded ports")
 subparsers.add_parser("clear", help="Clear all forwarded ports")
 
-ARGS = parser.parse_args()
+try:
+    ARGS = parser.parse_args()
+except argparse.ArgumentError as e:
+    # Default to `add` if a port is given instead of an action
+    if e.argument_name == "action" and e.message.startswith("invalid choice:"):
+        match = re.findall(r"invalid choice: '(.*?)'", e.message)
+        if match:
+            # Try parsing as a port
+            portsparser = PortsParser(None, None, None)
+            if portsparser(None, None, match[0], return_value=True):  # If it is a port, use `add` action
+                ARGS = parser.parse_args(["add", match[0]])
+            else:
+                print(e.message)
+                exit(1)
+        else:
+            print(e.message)
+            exit(1)
 
 
 def get_ip():  # Get WSL IP from interface
