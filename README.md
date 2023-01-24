@@ -1,4 +1,4 @@
-# WSL-Port-Forward
+# WSL Port Forward
 
 Windows Subsystem Linux (WSL) is a very useful Windows feature for developers, security researchers and technical people in general. 
 But one thing that trips a lot of people up when doing ethical hacking, is **creating listeners**. When creating a listener with `nc` for example, 
@@ -93,3 +93,30 @@ $ pfw clear
 
 [+] Cleared all ports!
 ```
+
+## Troubleshooting
+
+### "It doesn't work"
+
+* Make sure your firewall isn't blocking the traffic. Turn it off or make an exception
+* Make sure you are listening on a TCP port, portproxy does not support UDP yet
+* Try forwarding and listening on a different port, if that does work see the section below
+
+### "It doesn't work on this specific port"
+
+1. See if any other processes are using the port ([source](https://stackoverflow.com/a/48199/10508498)):
+
+```PowerShell
+Get-Process -Id (Get-NetTCPConnection -LocalPort $Port).OwningProcess
+```
+
+2. If there does not seem to be any other process using the port, try restarting Host Network Service ([source](https://stackoverflow.com/a/67442253/10508498))
+
+```cmd
+net stop hns && net start hns
+```
+
+> **Warning**: After running this command, WSL might not start and give a cryptic "The remote procedure call failed" error. If so, you can try restarting the LxssManager ([source](https://github.com/microsoft/WSL/issues/4998#issuecomment-601764474))
+> ```PowerShell
+> Restart-Service LxssManager
+> ```
