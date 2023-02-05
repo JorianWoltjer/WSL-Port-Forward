@@ -1,10 +1,8 @@
-#!/usr/bin/python3
+#!/usr/bin/python3.9
 import argparse
 import re
 import subprocess
-from importlib import import_module
 import sys
-wsl_sudo = import_module("wsl-sudo")  # Cannot normally import name with a dash (-)
 
 
 class PortsParser(argparse.Action):
@@ -65,8 +63,10 @@ def get_ip():  # Get WSL IP from interface
 
 def run_as_admin(command):  # Run command as administrator using wsl-sudo
     print("[~] Starting administrator prompt...")
-    wsl_sudo.UnprivilegedClient().main(["powershell.exe", "-Command", command], 0)
-
+    
+    return subprocess.check_output(["powershell.exe", "Start-Process", "-Verb", "runas", "-WindowStyle", "hidden", "-Wait", 
+                                    "-FilePath", "powershell", "-ArgumentList", f'"{command}"']).decode("utf-8").strip()
+    
 def run_as_user(command):  # Run command normally
     return subprocess.check_output(["powershell.exe", "-Command", command]).decode("utf-8").strip()
 

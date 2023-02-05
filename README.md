@@ -7,7 +7,7 @@ Windows does **not** automatically send connections to a specific port through t
 
 This is where this tool comes in. `pfw` (Port ForWard) can use the Windows `netsh` commands to tell windows to send connections to a specific port through to WSL. This will allow you to create listeners in WSL, and forward the port from Windows, to make a connection to your computers IP go straight to the listener on WSL. 
 
-Because `netsh` requires administrator privilages, it uses [wsl-sudo](https://github.com/Chronial/wsl-sudo) by [Chronial](https://github.com/Chronial) to give an administrator prompt. It makes it as simple as just clicking "Yes".
+Because `netsh` requires administrator privilages, it pops up a UAC prompt on state-changing commands. It makes it as simple as just clicking "Yes".
 
 ## Install
 
